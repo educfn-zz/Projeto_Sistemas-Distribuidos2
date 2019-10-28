@@ -26,7 +26,7 @@ public class SocketServidor {
     
     private void criarServerSocket(int porta) throws IOException 
     {
-        serverSocket = new ServerSocket();
+        serverSocket = new ServerSocket(porta);
     }
     
     private Socket esperaConexao() throws IOException
@@ -61,10 +61,12 @@ public class SocketServidor {
         * sucessivas converssões de Objeto em bytes e vice-versa. O decorator 
         * ira fazer a comunicação com a Stream.
         */
-            
+        
+        System.out.println("Tratando...");
         String msg = input.readUTF();
         System.out.println("Mensagem recebida...");
         output.writeUTF("Hello World!");
+        output.flush();
         
         
         //4.2- Fechar streams de entrada e saída
@@ -75,7 +77,9 @@ public class SocketServidor {
         catch (IOException e) 
         {
             //Area para o tratamento de falhas na comunicação 
-            //com 1(um) cliente(Client).
+            //para cada cliente(Client) criado.
+            System.out.println("Problema no tratamento da conexão com o cliente: " + socket.getInetAddress());
+            System.out.println("Erro: " + e.getMessage());
         }
         finally
         {
@@ -89,6 +93,7 @@ public class SocketServidor {
     
     public static void main(String[] args) 
     {
+        
         try
         {
             SocketServidor server = new SocketServidor();
