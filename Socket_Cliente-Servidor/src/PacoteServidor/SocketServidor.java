@@ -50,10 +50,6 @@ public class SocketServidor {
         * 1(Um) Socket para cada cliente de Servidor.
         */
         
-        try 
-        {
-            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
         /*
         * O 'ObjectInputStream' serve como um 'decorator' do InputStream, assim
         *como no caso do OutputStream; para poder escrever(write) e ler (read) 
@@ -61,7 +57,18 @@ public class SocketServidor {
         * sucessivas converssões de Objeto em bytes e vice-versa. O decorator 
         * ira fazer a comunicação com a Stream.
         */
+        try 
+        {
+            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
         
+        /*
+          Protocolo
+            Cliente --> HELLO
+            Server <-- HELLO WORLD
+        */
+        /*4 - Tratar a conversação entre cliente e servidor (tratar protocolo)
+        */
         System.out.println("Tratando...");
         String msg = input.readUTF();
         System.out.println("Mensagem recebida...");
@@ -95,22 +102,27 @@ public class SocketServidor {
     {
         
         try
-        {
-            SocketServidor server = new SocketServidor();
-            
-            //Para teste
-            System.out.println("Aguando conexão...");
-            
-            server.criarServerSocket(5555);                    
-            Socket socket = server.esperaConexao();
-            
-            //Para teste
-            System.out.println("Cliente conectado");
-            
-            server.trataConexao(socket);
-            
-             //Para teste
-            System.out.println("Cliente finalizado.");
+        {                                         
+                SocketServidor server = new SocketServidor();
+
+                //Para teste
+                System.out.println("Aguando conexão...");
+
+                server.criarServerSocket(5555);     
+            while (true) 
+            {  
+                Socket socket = server.esperaConexao();
+
+                //Para teste
+                System.out.println("Cliente conectado");
+
+                //Espaço reservado para criar codigo para novo processo(thread)
+                
+                server.trataConexao(socket);
+
+                 //Para teste
+                System.out.println("Cliente finalizado.");
+            }
         }
         catch (IOException e)
         {

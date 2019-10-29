@@ -27,7 +27,8 @@ public class SocketCliente {
         try 
         {
             //Cria conexão entre o cliente e o servidor
-            Socket socket = new Socket("localhost", 5555);
+            Socket socket;
+            socket = new Socket("localhost", 5555);
             
             //criação dos treams de entrada e saída
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
