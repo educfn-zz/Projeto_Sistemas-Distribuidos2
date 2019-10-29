@@ -5,6 +5,8 @@
  */
 package PacoteCliente;
 
+import Pacote_Util.Mensagem;
+import Pacote_Util.Status;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -32,15 +34,44 @@ public class SocketCliente {
             
             //criação dos treams de entrada e saída
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());           
+            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
             
-            String msg = "HELLO";
-            output.writeUTF(msg);
-            output.flush();
+            //Para teste
+            System.out.println("Enviando mensagem...");
             
-            msg = input.readUTF();
+            /*
+            Protocolo
+            HELLO
+            nome : String
+            
+            HELLOREPLY
+            Ok, ERRO, PARAMERROR
+            mensagem : String
+            
+            */
+            
+            
+            Mensagem m = new Mensagem("HELLO");
+            m.setStatus(Status.SOLICITACAO);
+            m.setParam("nome", "Eduardo");
+            m.setParam("sobrenome", "Dipp");
+                  
+            output.writeObject(m);
             output.flush(); //liberar o buffer para envio
-            System.out.println("Resposta: " + msg);
+            
+            System.out.println("Mensagem " + m + "\n enviada.");
+            
+            m = (Mensagem) input.readObject();
+            System.out.println("Resposta: " + m);
+            
+            if(m.getStatus()  == Status.OK)
+            {
+                String resposta = (String) m.getParam("mensagem");
+                System.out.println("Mensagem: \n" + resposta);
+            }else
+            {
+                System.out.println("Erro: " + m.getStatus());
+            }
             
             input.close();
             output.close();
@@ -48,6 +79,9 @@ public class SocketCliente {
             
         } catch (IOException ex) 
         {
+            Logger.getLogger(SocketCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Erro de cast: " + ex.getMessage());
             Logger.getLogger(SocketCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
         

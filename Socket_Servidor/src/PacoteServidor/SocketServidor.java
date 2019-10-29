@@ -1,11 +1,15 @@
 package PacoteServidor;
 
 
+import Pacote_Util.Mensagem;
+import Pacote_Util.Status;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SocketServidor {
 
@@ -64,15 +68,39 @@ public class SocketServidor {
         
         /*
           Protocolo
-            Cliente --> HELLO
-            Server <-- HELLO WORLD
+            HELLO
+            nome : String
+            
+            HELLOREPLY
+            Ok, ERRO, PARAMERROR
+            mensagem : String
+            
         */
         /*4 - Tratar a conversação entre cliente e servidor (tratar protocolo)
         */
         System.out.println("Tratando...");
-        String msg = input.readUTF();
-        System.out.println("Mensagem recebida...");
-        output.writeUTF("Hello World!");
+        Mensagem msg = (Mensagem) input.readObject();
+        String operacao = msg.getOperacao();
+        Mensagem reply = null;
+        
+        if (operacao.equals("HELLO"))
+        {
+            String nome = (String) msg.getParam("nome");
+            String sobrenome = (String) msg.getParam("sobrenome");
+            
+            reply = new Mensagem("HELLOREPLY");
+            
+            if( nome == null || sobrenome == null) 
+                reply.setStatus( Status.PARAMERROR);
+            else
+            {
+                reply.setStatus( Status.OK );
+                reply.setParam( "mensagem", "Hello World, "+ nome + " " + sobrenome );
+            }
+            
+        }
+        
+        output.writeObject(reply);
         output.flush();
         
         
@@ -81,12 +109,15 @@ public class SocketServidor {
         output.close();
         
         } 
-        catch (IOException e) 
+        catch (IOException ex) 
         {
             //Area para o tratamento de falhas na comunicação 
             //para cada cliente(Client) criado.
             System.out.println("Problema no tratamento da conexão com o cliente: " + socket.getInetAddress());
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Erro: " + ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Erro de cast: " + ex.getMessage());
+            Logger.getLogger(SocketServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally
         {
@@ -127,6 +158,7 @@ public class SocketServidor {
         catch (IOException e)
         {
             //tratar exceção
+            System.out.println("Erro no servidor: " + e.getMessage());
         }
     }
     
