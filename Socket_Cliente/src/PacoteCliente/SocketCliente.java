@@ -47,14 +47,14 @@ public class SocketCliente {
             HELLOREPLY
             Ok, ERRO, PARAMERROR
             mensagem : String
+                     
+            */                      
             
-            */
+            Mensagem m = new Mensagem("DIV");
             
-            
-            Mensagem m = new Mensagem("HELLO");
-            m.setStatus(Status.SOLICITACAO);
-            m.setParam("nome", "Eduardo");
-            m.setParam("sobrenome", "Dipp");
+            m.setParam("op1", 2);
+            m.setParam("op2", 10);
+           
                   
             output.writeObject(m);
             output.flush(); //liberar o buffer para envio
@@ -66,7 +66,7 @@ public class SocketCliente {
             
             if(m.getStatus()  == Status.OK)
             {
-                String resposta = (String) m.getParam("mensagem");
+                Float resposta = (float) m.getParam("res");
                 System.out.println("Mensagem: \n" + resposta);
             }else
             {

@@ -10,5 +10,5 @@ package Pacote_Util;
  * @author EduardoCFN
  */
 public enum Status {
-    OK, ERROR, PARAMERROR, SOLICITACAO
+    OK, ERROR, PARAMERROR, SOLICITACAO, DIVZERO
 }

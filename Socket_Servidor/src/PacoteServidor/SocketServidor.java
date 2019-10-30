@@ -79,14 +79,14 @@ public class SocketServidor {
         /*4 - Tratar a conversação entre cliente e servidor (tratar protocolo)
         */
         System.out.println("Tratando...");
-        Mensagem msg = (Mensagem) input.readObject();
-        String operacao = msg.getOperacao();
+        Mensagem m = (Mensagem) input.readObject();
+        String operacao = m.getOperacao();
         Mensagem reply = null;
         
         if (operacao.equals("HELLO"))
         {
-            String nome = (String) msg.getParam("nome");
-            String sobrenome = (String) msg.getParam("sobrenome");
+            String nome = (String) m.getParam("nome");
+            String sobrenome = (String) m.getParam("sobrenome");
             
             reply = new Mensagem("HELLOREPLY");
             
@@ -96,6 +96,34 @@ public class SocketServidor {
             {
                 reply.setStatus( Status.OK );
                 reply.setParam( "mensagem", "Hello World, "+ nome + " " + sobrenome );
+            }
+            
+        }
+        
+        if( operacao.equals("DIV"))
+        {
+            try
+            {
+                Integer op1 = (Integer) m.getParam("op1");
+                Integer op2 = (Integer) m.getParam("op2");
+
+                //testar os dados
+                reply = new Mensagem("DIVREPLY");
+
+                if( op2 == 0)
+                {
+                    reply.setStatus(Status.DIVZERO);
+                }else
+                {
+                    reply.setStatus(Status.OK);
+                    
+                    float div = (float) op1/op2;
+                    reply.setParam("res", div);
+                }
+            }catch(Exception e)
+            {
+                reply = new Mensagem("DIVREPLY");
+                reply.setStatus(Status.PARAMERROR);
             }
             
         }
