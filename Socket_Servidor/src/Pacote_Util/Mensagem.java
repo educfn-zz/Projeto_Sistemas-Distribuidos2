@@ -45,11 +45,6 @@ public class Mensagem implements Serializable{
         return status;
     }
     
-    
-    /*
-        "NOME" --> "José"
-        "IDADE" --> 35
-    */
     public void setParam( String chave, Object valor)
     {
         params.put(chave, valor);

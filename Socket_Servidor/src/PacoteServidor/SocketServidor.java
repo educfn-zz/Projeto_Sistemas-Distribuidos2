@@ -1,6 +1,7 @@
 package PacoteServidor;
 
 
+import Pacote_Util.Estados;
 import Pacote_Util.Mensagem;
 import Pacote_Util.Status;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sun.net.www.protocol.http.HttpURLConnection;
 
 public class SocketServidor {
 
@@ -80,52 +82,103 @@ public class SocketServidor {
         */
         System.out.println("Tratando...");
         Mensagem m = (Mensagem) input.readObject();
+        System.out.println("Mensagem do cliente:\n" + m);
+        
+        Estados estado = Estados.CONECTADO;
+        
         String operacao = m.getOperacao();
+        
         Mensagem reply = null;
         
-        if (operacao.equals("HELLO"))
+        //estados: conectado, autenticado e sair(cliente terminou a conexão)
+        switch(estado)
         {
-            String nome = (String) m.getParam("nome");
-            String sobrenome = (String) m.getParam("sobrenome");
-            
-            reply = new Mensagem("HELLOREPLY");
-            
-            if( nome == null || sobrenome == null) 
-                reply.setStatus( Status.PARAMERROR);
-            else
-            {
-                reply.setStatus( Status.OK );
-                reply.setParam( "mensagem", "Hello World, "+ nome + " " + sobrenome );
-            }
-            
-        }
-        
-        if( operacao.equals("DIV"))
-        {
-            try
-            {
-                Integer op1 = (Integer) m.getParam("op1");
-                Integer op2 = (Integer) m.getParam("op2");
-
-                //testar os dados
-                reply = new Mensagem("DIVREPLY");
-
-                if( op2 == 0)
+            case CONECTADO:
+                switch(operacao)
                 {
-                    reply.setStatus(Status.DIVZERO);
-                }else
-                {
-                    reply.setStatus(Status.OK);
-                    
-                    float div = (float) op1/op2;
-                    reply.setParam("res", div);
+                    case "LOGIN":
+                        try
+                        {
+                            String user = (String) m.getParam("user");
+                            String pass = (String) m.getParam("pass");
+                            
+                            if( user.equals("ALUNO") && pass.equals("ESTUDIOSO"))
+                            {
+                                m.setStatus(Status.OK);
+                                estado = Estados.AUTENTICADO;
+                            }else
+                            {
+                                m.setStatus(Status.ERROR);
+                            }
+                            
+                        }catch(Exception e)
+                        {
+                            m.setStatus(Status.PARAMERROR);
+                            m.setParam("msg", "Erro nos parâmetros do protocolo.");
+                        }
+                        
+                        break;
+                    case "HELLO":
+                        String nome = (String) m.getParam("nome");
+                        String sobrenome = (String) m.getParam("sobrenome");
+                        
+                        reply = new Mensagem("HELLOREPLY");
+                        
+                        if( nome == null || sobrenome == null)
+                            reply.setStatus( Status.PARAMERROR);
+                        else
+                        {
+                            reply.setStatus( Status.OK);
+                            reply.setParam("mensagem", "Hello World, "+ nome+ " "+ sobrenome);
+                        }
+                        break;
+                    default:
+                        //responder mensagem de erro: Não autorizado/ou inválida.
+                        break;
                 }
-            }catch(Exception e)
-            {
-                reply = new Mensagem("DIVREPLY");
-                reply.setStatus(Status.PARAMERROR);
-            }
-            
+                break;
+            case AUTENTICADO:
+                switch(operacao)
+                {
+                    case "DIV":
+                    try
+                    {
+                        Integer op1 = (Integer) m.getParam("op1");
+                        Integer op2 = (Integer) m.getParam("op2");
+
+                        //testar os dados
+                        reply = new Mensagem("DIVREPLY");
+
+                        if( op2 == 0)
+                        {
+                            reply.setStatus(Status.DIVZERO);
+                        }else
+                        {
+                            reply.setStatus(Status.OK);
+
+                            float div = (float) op1/op2;
+                            reply.setParam("res", div);
+                        }
+                    }catch(Exception e)
+                    {
+                        reply = new Mensagem("DIVREPLY");
+                        reply.setStatus(Status.PARAMERROR);
+                    }
+                        break;
+                    case "SUB":
+                        break;
+                    case "MUL":
+                        break;
+                    case "SOMA":
+                        break;
+                    case "LOGOUT":
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case SAIR:
+                break;
         }
         
         output.writeObject(reply);
