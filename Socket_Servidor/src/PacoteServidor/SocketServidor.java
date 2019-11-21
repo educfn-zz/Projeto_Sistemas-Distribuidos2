@@ -1,8 +1,8 @@
 package PacoteServidor;
 
 
-import Pacote_Util.Mensagem;
-import Pacote_Util.Status;
+import PacoteServidor.Mensagem;
+import PacoteServidor.Status;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -49,7 +49,7 @@ public class SocketServidor {
         //Local onde será aplicado o protocolo da aplicação
         /*
         * 3- Criar streams de entrada e saída;
-        * 4- Tratar a conversação entre cliente e servidor (tratar protoclo);
+        * 4- Tratar a conversação entre cliente e servidor;
         *
         * 1(Um) Socket para cada cliente de Servidor.
         */
@@ -66,16 +66,6 @@ public class SocketServidor {
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
         
-        /*
-          Protocolo
-            HELLO
-            nome : String
-            
-            HELLOREPLY
-            Ok, ERRO, PARAMERROR
-            mensagem : String
-            
-        */
         /*4 - Tratar a conversação entre cliente e servidor (tratar protocolo)
         */
         System.out.println("Tratando...");
@@ -98,6 +88,9 @@ public class SocketServidor {
                 reply.setParam( "mensagem", "Hello World, "+ nome + " " + sobrenome );
             }
             
+        }else if(operacao.equals("PROCESSAR"))
+        {
+            
         }
         
         output.writeObject(reply);
@@ -113,10 +106,10 @@ public class SocketServidor {
         {
             //Area para o tratamento de falhas na comunicação 
             //para cada cliente(Client) criado.
-            System.out.println("Problema no tratamento da conexão com o cliente: " + socket.getInetAddress());
-            System.out.println("Erro: " + ex.getMessage());
+            System.out.println("Socket_Servidor: Problema no tratamento da conexão com o cliente: " + socket.getInetAddress());
+            System.out.println("Socket_Servidor: Erro: " + ex.getMessage());
         } catch (ClassNotFoundException ex) {
-            System.out.println("Erro de cast: " + ex.getMessage());
+            System.out.println("Socket_Servidor: Erro de cast: " + ex.getMessage());
             Logger.getLogger(SocketServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally
@@ -124,41 +117,40 @@ public class SocketServidor {
             //4.1- Fechar socket de comunicação entre servidor/cliente
             fechaSocket(socket);
         }
-        
-     
-        
+           
     }
     
-    public static void main(String[] args) 
+    public void iniciarServidor(int numeroPorta)
     {
         
+        if(numeroPorta <= 0 || numeroPorta > 65535)
+        {
+            System.err.println("A porta TCP/UPD esta fora do range(1-65535)");
+            return;
+        }       
+       
         try
         {                                         
                 SocketServidor server = new SocketServidor();
 
-                //Para teste
-                System.out.println("Aguando conexão...");
+                System.out.println("Socket_Servidor: Aguardando conexão...");
 
-                server.criarServerSocket(5555);     
+                server.criarServerSocket(numeroPorta);     
             while (true) 
             {  
                 Socket socket = server.esperaConexao();
 
-                //Para teste
-                System.out.println("Cliente conectado");
-
-                //Espaço reservado para criar codigo para novo processo(thread)
+                System.out.println("Socket_Servidor: Cliente conectado");
                 
                 server.trataConexao(socket);
 
-                 //Para teste
-                System.out.println("Cliente finalizado.");
+                System.out.println("Socket_Servidor: Cliente finalizado.");
             }
         }
         catch (IOException e)
         {
             //tratar exceção
-            System.out.println("Erro no servidor: " + e.getMessage());
+            System.out.println("Socket_Servidor: Erro no servidor: " + e.getMessage());
         }
     }
     

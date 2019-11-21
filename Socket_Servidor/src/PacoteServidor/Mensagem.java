@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Pacote_Util;
+package PacoteServidor;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,8 +13,8 @@ import java.util.Map;
  *
  * @author EduardoCFN
  */
-public class Mensagem implements Serializable{
-    
+public class Mensagem 
+{
     private String operacao;
     private Status status;
     
@@ -23,6 +23,8 @@ public class Mensagem implements Serializable{
     */
     
     Map<String, Object> params;
+    
+    ArrayList<String> lista = null;
     
     public Mensagem(String operacao)
     {
@@ -58,6 +60,33 @@ public class Mensagem implements Serializable{
     public Object getParam( String chave)
     {
         return params.get(chave);
+    }
+    
+    public void addString(String s)
+    {
+        if(lista == null)
+        lista.add(s);
+    }
+    
+    //false: A String não está presente na 'lista'.
+    //true: A String esta presente na 'lista' e foi removida.
+    public boolean removerString(String s)
+    {
+        return lista.remove(s);
+    }
+    
+    public ArrayList<String> retornarLista()
+    {
+        if(!lista.isEmpty())
+        {
+            ArrayList<String> array = (ArrayList) lista.clone();
+        
+             return array;
+        }else
+        {
+            return null;
+        }
+          
     }
     
     @Override

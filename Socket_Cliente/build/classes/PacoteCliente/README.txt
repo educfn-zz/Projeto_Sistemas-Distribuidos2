@@ -1,4 +1,4 @@
-README - PscoteServidor
+README - PscoteCliente
 
 SocketCliente.java
 
