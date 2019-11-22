@@ -5,7 +5,9 @@
  */
 package aplicacao;
 
+import PacoteOutrasExtensoes.Paciente;
 import PacoteServidor.SocketCliente;
+import java.util.List;
 
 /**
  *
@@ -17,7 +19,9 @@ public class AplicacaoTesteCliente {
     {
     SocketCliente cliente = new SocketCliente();
     
-    cliente.enviarServidor("localhost", 5555);
+    List<Paciente> pacientes = null;
+    
+    cliente.enviarServidor("localhost", 5555, pacientes);
     }
     
 }

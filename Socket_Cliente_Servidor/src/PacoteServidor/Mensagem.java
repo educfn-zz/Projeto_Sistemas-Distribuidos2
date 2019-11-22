@@ -6,8 +6,8 @@
 package PacoteServidor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,13 +19,12 @@ public class Mensagem implements Serializable
     private String operacao;
     private Status status;
     Map<String, Object> params;  
-    ArrayList<String> lista;
+    List<String> lista;
     
     public Mensagem(String operacao)
     {
         this.operacao = operacao;
         params = new HashMap<>();
-        lista = new ArrayList<>();
     }
     
     public String getOperacao()
@@ -66,13 +65,11 @@ public class Mensagem implements Serializable
         return lista.remove(s);
     }
     
-    public ArrayList<String> retornarLista()
+    public List<String> retornarLista()
     {
         if(!lista.isEmpty())
         {
-            ArrayList<String> array = (ArrayList) lista.clone();
-        
-             return array;
+             return lista;
         }else
         {
             return null;

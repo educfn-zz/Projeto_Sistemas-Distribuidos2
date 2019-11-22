@@ -1,10 +1,11 @@
 package PacoteServidor;
 
+import PacoteOutrasExtensoes.Paciente;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,18 +26,10 @@ public class SocketCliente
     * CIDADE - Cidade onde vive o cliente
     * NOME_M - Nome da Mae do cliente
     */
-    public ArrayList<String> preparaMensagem()
-    {
-        ArrayList<String> texto = new ArrayList<>();
-        
-        
-        
-        return texto;
-    }
     
-    public ArrayList<String> enviarServidor(String ip, int numeroPorta, ArrayList<String> texto)
+    public List<Paciente> enviarServidor(String ip, int numeroPorta, List<Paciente> texto)
     {
-        ArrayList<String> respostaServidor = new ArrayList<>();
+        List<Paciente> respostaServidor = null;
         
         /*
         1. Estabelecer conexão com o servidor
