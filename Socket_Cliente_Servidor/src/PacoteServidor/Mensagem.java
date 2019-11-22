@@ -5,6 +5,7 @@
  */
 package PacoteServidor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
  *
  * @author EduardoCFN
  */
-public class Mensagem 
+public class Mensagem implements Serializable
 {
     private String operacao;
     private Status status;

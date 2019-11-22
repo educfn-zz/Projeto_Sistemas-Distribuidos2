@@ -1,7 +1,5 @@
-package PacoteCliente;
+package PacoteServidor;
 
-import PacoteServidor.Mensagem;
-import PacoteServidor.Status;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,10 +10,8 @@ import java.util.logging.Logger;
 /**
  * @author EduardoCFN
  */
-public class SocketCliente {
-    
-    
-    public SocketCliente(){}
+public class SocketCliente
+{
     
     public void enviarServidor(String ip, int numeroPorta)
     {
