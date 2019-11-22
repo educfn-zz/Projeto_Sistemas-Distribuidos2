@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,9 +13,31 @@ import java.util.logging.Logger;
  */
 public class SocketCliente
 {
-    
-    public void enviarServidor(String ip, int numeroPorta)
+    /* Variaveis que compoem a mensagem customizada:
+    * ID - ID do cliente
+    * NOME - nome do cliente
+    * DATA_N - Data de Nascimento do cliente
+    * CPF - CPF do cliente
+    * TELEFONE 1
+    * TELEFONE 2
+    * UF - Unidade Federativa onde vive o cliente
+    * ENDERECO - Endereco do cliente
+    * CIDADE - Cidade onde vive o cliente
+    * NOME_M - Nome da Mae do cliente
+    */
+    public ArrayList<String> preparaMensagem()
     {
+        ArrayList<String> texto = new ArrayList<>();
+        
+        
+        
+        return texto;
+    }
+    
+    public ArrayList<String> enviarServidor(String ip, int numeroPorta, ArrayList<String> texto)
+    {
+        ArrayList<String> respostaServidor = new ArrayList<>();
+        
         /*
         1. Estabelecer conexão com o servidor
         2. Trocar mensagens com o servidor
@@ -24,7 +47,7 @@ public class SocketCliente
         {
             //Cria conexão entre o cliente e o servidor
             Socket socket;
-            socket = new Socket("localhost", 5555);
+            socket = new Socket(ip, numeroPorta);
             
             //criação dos treams de entrada e saída
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
@@ -49,6 +72,7 @@ public class SocketCliente
             m.setStatus(Status.SOLICITACAO);
             m.setParam("nome", "Eduardo");
             m.setParam("sobrenome", "Dipp");
+            m.addString("Teste");
                   
             output.writeObject(m);
             output.flush(); //liberar o buffer para envio
@@ -79,6 +103,7 @@ public class SocketCliente
             Logger.getLogger(SocketCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        return respostaServidor;
         
     }
     

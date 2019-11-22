@@ -18,19 +18,14 @@ public class Mensagem implements Serializable
 {
     private String operacao;
     private Status status;
-    
-    /*
-    chave : Object
-    */
-    
-    Map<String, Object> params;
-    
-    ArrayList<String> lista = null;
+    Map<String, Object> params;  
+    ArrayList<String> lista;
     
     public Mensagem(String operacao)
     {
         this.operacao = operacao;
         params = new HashMap<>();
+        lista = new ArrayList<>();
     }
     
     public String getOperacao()
@@ -48,11 +43,6 @@ public class Mensagem implements Serializable
         return status;
     }
     
-    
-    /*
-        "NOME" --> "José"
-        "IDADE" --> 35
-    */
     public void setParam( String chave, Object valor)
     {
         params.put(chave, valor);

@@ -73,7 +73,7 @@ public class SocketServidor {
         if (operacao.equals("HELLO"))
         {
             String nome = (String) msg.getParam("nome");
-            String sobrenome = (String) msg.getParam("sobrenome");
+             String sobrenome = (String) msg.getParam("sobrenome");
             
             reply = new Mensagem("HELLOREPLY");
             
