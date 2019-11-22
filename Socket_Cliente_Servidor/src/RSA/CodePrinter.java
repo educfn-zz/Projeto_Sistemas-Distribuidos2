@@ -10,28 +10,26 @@ package RSA;
  * @author EduardoCFN
  */
 public class CodePrinter {
+
     /**
      * Mostra um array de bytes como um "dump".
      *
      * @param b O array de bytes que deve ser mostrado em formato dump.
      */
-    static void printHex(byte[] b) 
-    {
+    static void printHex(byte[] b) {
         if (b == null) {
             System.out.println("(null)");
         } else {
-            System.out.println("\n\n\n");//Codigo adicionado para separar estas 
+            System.out.print("\n\n\n");//Codigo adicionado para separar estas 
             //informações de outras em caso de debug.
             for (int i = 0; i < b.length; ++i) {
                 if (i % 16 == 0) {
-                    System.out.print(Integer
-                            .toHexString((i & 0xFFFF) | 0x10000)
-                            .substring(1, 5)
-                            + " - ");
+                    System.out.print(Integer.toHexString((i & 0xFFFF) | 0x10000)
+                    .substring(1, 5) + " - ");
                 }
                 System.out.print(Integer.toHexString((b[i] & 0xFF) | 0x100)
-                        .substring(1, 3)
-                        + " ");
+                .substring(1, 3) + " ");
+
                 if (i % 16 == 15 || i == b.length - 1) {
                     int j;
                     for (j = 16 - i % 16; j > 1; --j) {
